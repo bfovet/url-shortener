@@ -2,10 +2,11 @@ from beanie import Document
 from pydantic import HttpUrl
 
 
-class Url(Document):
+class ShortenedUrl(Document):
 
     class Settings:
         name = "urls"
 
-    url: HttpUrl
     id: str
+    original_url: HttpUrl
+    short_link: str

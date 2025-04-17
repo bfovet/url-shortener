@@ -7,8 +7,11 @@ authors = [
 ]
 requires-python = ">=3.12"
 dependencies = [
+    "beanie>=1.29.0",
     "fastapi[standard]>=0.115.12",
-    "pymongo[srv]"
+    "motor>=3.7.0",
+    "pydantic>=2.11.3",
+    "pydantic-settings>=2.8.1",
 ]
 
 [build-system]

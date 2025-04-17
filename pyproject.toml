@@ -1,0 +1,16 @@
+[project]
+name = "url-shortener"
+version = "0.1.0"
+description = "URL shortener"
+authors = [
+    { name = "Benjamin Fovet", email = "b.fovet@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi[standard]>=0.115.12",
+    "pymongo[srv]"
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

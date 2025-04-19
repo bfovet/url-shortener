@@ -1,4 +1,5 @@
 from fastapi import APIRouter, HTTPException, status
+from fastapi.responses import RedirectResponse
 from pydantic import HttpUrl
 from urllib.parse import urlparse
 
@@ -40,3 +41,19 @@ async def shorten_url(url: HttpUrl) -> ShortenedUrl:
     return ShortenedUrl(id=str(inserted_url["_id"]),
                         original_url=inserted_url["original_url"],
                         hash_key=inserted_url["hash_key"])
+
+@router.get(
+    "/{hash_key}",
+    status_code=status.HTTP_302_FOUND,
+    response_model=None,
+    summary="Redirect"
+)
+async def redirect(hash_key: str) -> RedirectResponse:
+    session = database
+    url = await session["urls"].find_one({"hash_key": hash_key})
+
+    if not url:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail="URL not found")
+
+    return RedirectResponse(url=url["original_url"])

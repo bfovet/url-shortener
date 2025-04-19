@@ -8,3 +8,4 @@ class Settings(BaseSettings):
 
 client = AsyncIOMotorClient(Settings().mongodb_url)
 database = client.shortener
+database.urls.create_index("hash_key")

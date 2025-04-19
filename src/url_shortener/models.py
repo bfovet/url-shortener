@@ -9,4 +9,4 @@ class ShortenedUrl(Document):
 
     id: str
     original_url: HttpUrl
-    short_link: str
+    hash_key: str

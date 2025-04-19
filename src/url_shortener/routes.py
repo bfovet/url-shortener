@@ -6,17 +6,10 @@ import requests
 
 from url_shortener.models import ShortenedUrl
 from url_shortener.db.session import database
+from url_shortener.shortener import generate_hash_url
 
 
 router = APIRouter()
-
-
-def is_url(url: str):
-    try:
-        result = urlparse(url)
-        return all([result.scheme, result.netloc])
-    except ValueError:
-        return False
 
 
 def check_url_is_alive(url: str):
@@ -39,11 +32,11 @@ async def shorten_url(url: HttpUrl) -> ShortenedUrl:
     session = database
     inserted_url = await session["urls"].insert_one({
         "original_url": str(url),
-        "short_link": "XXXXX"
+        "hash_key": generate_hash_url(url)
     })
 
     inserted_url = await session["urls"].find_one({"_id": inserted_url.inserted_id})
 
     return ShortenedUrl(id=str(inserted_url["_id"]),
                         original_url=inserted_url["original_url"],
-                        short_link=inserted_url["short_link"])
+                        hash_key=inserted_url["hash_key"])

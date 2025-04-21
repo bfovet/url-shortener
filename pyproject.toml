@@ -19,3 +19,15 @@ dependencies = [
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[tool.pytest.ini_options]
+testpaths = ["tests",]
+python_files = ["test*.py"]
+console_output_style = "progress"
+asyncio_default_fixture_loop_scope = "session"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3.5",
+    "pytest-asyncio>=0.26.0",
+]

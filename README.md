@@ -23,3 +23,12 @@ https://medium.com/@yoosufpusaleem/building-high-performance-ai-applications-wit
 
 
 https://github.com/dynaconf/dynaconf
+
+
+TODO:
+- logging
+- Split shorten and redirect services
+- Dockerfile
+- add action to deploy to AWS ECS + Fargate
+- Terraform
+- unit tests with mock

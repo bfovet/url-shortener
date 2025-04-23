@@ -1,7 +1,6 @@
 from fastapi import APIRouter, HTTPException, status
 from fastapi.responses import RedirectResponse
 from pydantic import HttpUrl
-from urllib.parse import urlparse
 
 import requests
 

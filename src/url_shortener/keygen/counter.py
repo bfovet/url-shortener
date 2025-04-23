@@ -1,32 +1,34 @@
 from collections import deque
 
-from url_shortener.keygen.session import redis
+import redis
 
 
-class Singleton(type):
-    _instances = {}
-    def __call__(cls, *args, **kwargs):
-        if cls not in cls._instances:
-            cls._instances[cls] = super(Singleton, cls).__call__(*args, **kwargs)
-        return cls._instances[cls]
+class IdsProvider:
+    def __init__(self):
+        self._counter_key = "url_counter"
+        self._incr_value = 1000
+        self._ids: deque = deque()
 
+    async def get_ids(self, redis_client: redis.Redis) -> deque:
+        if not self._ids:
+            print(f"Requesting {self._incr_value} values from key generation service")
+            self._ids = await self._get_ids(redis_client)
 
-class RedisKeyCounter(metaclass=Singleton):
-    counter_key = "url_counter"
-    incr_value = 1000
-    ids: deque = deque()
+        return self._ids
 
-    def get_ids(self):
-        # print(f"ids={self.ids} ({len(self.ids)} left)")
-        if not self.ids:
-            print(f"Requesting {self.incr_value} values from key generation service")
-            self.ids = self._get_ids()
-
-    def _get_ids(self):
-        pipe = redis.pipeline()
-        pipe.setnx(self.counter_key, 0)
-        pipe.get(self.counter_key)
-        pipe.incrby(self.counter_key, self.incr_value)
-        res = pipe.execute()
+    async def _get_ids(self, redis_client: redis.Redis) -> deque:
+        pipe = redis_client.pipeline()
+        pipe.setnx(self._counter_key, 0)
+        pipe.get(self._counter_key)
+        pipe.incrby(self._counter_key, self._incr_value)
+        res = await pipe.execute()
 
         return deque(range(int(res[1]), res[-1]))
+
+
+ids_provider = IdsProvider()
+
+
+async def get_next_id(redis_client: redis.Redis):
+    next_ids = await ids_provider.get_ids(redis_client)
+    return next_ids.popleft()

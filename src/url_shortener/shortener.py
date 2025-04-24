@@ -9,7 +9,9 @@ from url_shortener.keygen.counter import get_next_id
 
 def generate_hash_url_with_id(url: HttpUrl, id: int) -> str:
     hash_object = hashlib.sha512(f"{url}{id}".encode())
-    hash_base64 = base64.urlsafe_b64encode(str.encode(hash_object.hexdigest())).decode("utf-8")
+    hash_base64 = base64.urlsafe_b64encode(str.encode(hash_object.hexdigest())).decode(
+        "utf-8"
+    )
     return hash_base64[:7]
 
 

@@ -1,8 +1,7 @@
-from typing import Annotated, Any, AsyncIterator
+from typing import AsyncIterator
 
 from pydantic_settings import BaseSettings
 from redis import asyncio as redis
-from fastapi import Depends, FastAPI
 
 
 class Settings(BaseSettings):
@@ -12,5 +11,7 @@ class Settings(BaseSettings):
 
 
 async def get_redis() -> AsyncIterator[redis.Redis]:
-    async with redis.from_url(f"redis://{Settings().redis_url}:{Settings().redis_port}") as client:
+    async with redis.from_url(
+        f"redis://{Settings().redis_url}:{Settings().redis_port}"
+    ) as client:
         yield client

@@ -21,7 +21,8 @@ async def app_client(redis_client: redis.Redis) -> AsyncIterator[httpx.AsyncClie
     async def get_redis_override() -> redis.Redis:
         return redis_client
 
-    transport = httpx.ASGITransport(app=app)  # type: ignore[arg-type] # https://github.com/encode/httpx/issues/3111
-    async with httpx.AsyncClient(transport=transport, base_url="http://test") as app_client:
+    async with httpx.AsyncClient(
+        transport=httpx.ASGITransport(app=app), base_url="http://test"
+    ) as app_client:
         with mock.patch.dict(app.dependency_overrides, {get_redis: get_redis_override}):
             yield app_client

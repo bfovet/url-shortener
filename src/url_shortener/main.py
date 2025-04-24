@@ -9,6 +9,7 @@ from redis import asyncio as redis
 # from url_shortener.keygen.counter import RedisKeyCounter
 from url_shortener.keygen.session import get_redis
 from url_shortener.models import ShortenedUrl
+
 # from url_shortener.routes import router
 from url_shortener.shortener import generate_hash_url
 
@@ -39,6 +40,8 @@ app = FastAPI()
 
 
 @app.post("/shorten")
-async def shorten_url(url: HttpUrl, redis_client: Annotated[redis.Redis, Depends(get_redis)]) -> ShortenedUrl:
+async def shorten_url(
+    url: HttpUrl, redis_client: Annotated[redis.Redis, Depends(get_redis)]
+) -> ShortenedUrl:
     hash_key = await generate_hash_url(url, redis_client)
     return {"id": "0", "original_url": str(url), "hash_key": hash_key}

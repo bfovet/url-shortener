@@ -2,22 +2,12 @@ from fastapi import APIRouter, HTTPException, status
 from fastapi.responses import RedirectResponse
 from pydantic import HttpUrl
 
-import requests
-
 from url_shortener.models import ShortenedUrl
 from url_shortener.db.session import database
 from url_shortener.shortener import generate_hash_url
 
 
 router = APIRouter()
-
-
-def check_url_is_alive(url: str):
-    response = requests.head(url)
-    if response.status_code != 200:
-        raise HTTPException(
-            status_code=response.status_code, detail=f"URL {response.reason}"
-        )
 
 
 @router.post(

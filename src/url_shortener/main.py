@@ -12,6 +12,7 @@ from url_shortener.models import ShortenedUrl
 
 # from url_shortener.routes import router
 from url_shortener.shortener import generate_hash_url
+from url_shortener.utils import check_url_is_alive
 
 
 # async def lifespan(app: FastAPI):
@@ -43,5 +44,6 @@ app = FastAPI()
 async def shorten_url(
     url: HttpUrl, redis_client: Annotated[redis.Redis, Depends(get_redis)]
 ) -> ShortenedUrl:
+    check_url_is_alive(url)
     hash_key = await generate_hash_url(url, redis_client)
     return {"id": "0", "original_url": str(url), "hash_key": hash_key}

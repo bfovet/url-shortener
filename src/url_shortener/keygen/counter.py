@@ -1,6 +1,6 @@
 from collections import deque
 
-import redis
+from redis import asyncio as redis
 
 
 class IdsProvider:

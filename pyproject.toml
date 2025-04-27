@@ -23,12 +23,16 @@ build-backend = "hatchling.build"
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 asyncio_default_fixture_loop_scope = "session"
+asyncio_default_test_loop_scope="session"
 
 [dependency-groups]
 dev = [
+    "asgi-lifespan>=2.1.0",
     "fakeredis>=2.28.1",
+    "mongomock-motor>=0.0.35",
     "pytest>=8.3.5",
     "pytest-asyncio>=0.26.0",
+    "pytest-mock>=3.14.0",
 ]
 
 [project.scripts]

@@ -1,7 +1,6 @@
 from typing import Optional
 
 from beanie import Document, PydanticObjectId
-from fastapi import HTTPException
 from pydantic import Field, HttpUrl
 
 
@@ -16,10 +15,3 @@ class ShortenedUrl(Document):
     class Settings:
         # Name of the collection to store these URLs.
         name = "urls"
-
-
-async def get_url(url_id: PydanticObjectId) -> ShortenedUrl:
-    url = await ShortenedUrl.get(url_id)
-    if url is None:
-        raise HTTPException(status_code=404, detail="URL not found")
-    return url

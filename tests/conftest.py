@@ -37,7 +37,8 @@ async def test_client(redis_client: redis.Redis) -> AsyncIterator[httpx.AsyncCli
 
     # TODO: mocking MongoDB does not work
     async with LifespanManager(app):
-        async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url="http://test", follow_redirects=True) as ac:
-            with (mock.patch.dict(app.dependency_overrides, {get_redis: get_redis_override}),
-                  mock.patch.dict(app.dependency_overrides, {initialize_db: mock_database})):
+        async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url="http://test", follow_redirects=False) as ac:
+            # with (mock.patch.dict(app.dependency_overrides, {get_redis: get_redis_override}),
+            #       mock.patch.dict(app.dependency_overrides, {initialize_db: mock_database})):
+            with mock.patch.dict(app.dependency_overrides, {get_redis: get_redis_override}):
                 yield ac
